@@ -1,0 +1,28 @@
+{
+  "settings": {
+    "institutionName": "SMPIT Ponpes Terpadu Al-Multazam",
+    "examTitle": "Penilaian Akhir Semester",
+    "academicYear": "2026/2027",
+    "scanCooldownSeconds": 15,
+    "sessionMode": "auto",
+    "manualSessionId": "ses-1"
+  },
+  "teachers": [],
+  "sessions": [
+    {
+      "id": "ses-1",
+      "name": "Sesi 1 — Pagi",
+      "startTime": "07:30",
+      "endTime": "09:30",
+      "description": "Kehadiran Pengawas Sesi Pagi (Otomatis Harian)"
+    },
+    {
+      "id": "ses-2",
+      "name": "Sesi 2 — Siang",
+      "startTime": "10:00",
+      "endTime": "12:00",
+      "description": "Kehadiran Pengawas Sesi Kedua (Otomatis Harian)"
+    }
+  ],
+  "attendances": []
+}

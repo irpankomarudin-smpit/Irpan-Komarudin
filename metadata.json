@@ -1,0 +1,6 @@
+{
+  "name": "Sipanwas — LMS Kehadiran Pengawas Ujian",
+  "description": "Sistem manajemen kehadiran pengawas ujian berbasis pemindaian barcode kamera otomatis untuk HP, iPad, Laptop, dan Google TV.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

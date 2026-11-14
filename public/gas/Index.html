@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LMS Pengawas Ujian SMPIT AL-MULTAZAM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    h1, h2, h3, h4, .font-display { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .font-mono, .tabular-nums { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+    .camera-mirror video { transform: scaleX(-1); }
+    #gas-qr-reader video { width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 0.75rem; }
+    @media print {
+      @page { size: A4; margin: 12mm; }
+      body { background: #fff !important; }
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+      .print-break-inside-avoid { break-inside: avoid; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body class="bg-[#F4FAF6] text-slate-900 antialiased">
+  <div id="app" class="flex min-h-screen bg-gradient-to-br from-[#F4FAF6] via-[#F7FBF8] to-[#E6F4EB]">
+    <!-- Sidebar Desktop -->
+    <aside class="no-print relative hidden w-64 shrink-0 flex-col justify-between overflow-hidden border-r border-emerald-900/10 bg-white lg:flex">
+      <div class="relative z-10">
+        <div class="px-5 pb-4 pt-6 text-center">
+          <div class="flex justify-center">
+            <img id="brand-logo-sidebar" src="https://smpit.almultazam.sch.id/wp-content/uploads/2025/01/cropped-Logo-SMPIT.png" alt="Logo SMPIT AL-MULTAZAM" class="h-16 w-16 object-contain" referrerpolicy="no-referrer" />
+          </div>
+          <h1 class="mt-2.5 font-display text-[15px] font-extrabold leading-snug text-[#156235]">
+            LMS Pengawas Ujian
+            <span class="block text-sm font-bold text-[#0E4A27]">SMPIT AL-MULTAZAM</span>
+          </h1>
+          <p class="mt-0.5 text-[11px] font-medium text-slate-500">Kab. Kuningan, Jawa Barat</p>
+          <div class="mt-3 flex items-center justify-center gap-2">
+            <span class="h-px flex-1 bg-amber-400/50"></span>
+            <span class="h-2 w-2 rotate-45 bg-amber-500"></span>
+            <span class="h-px flex-1 bg-amber-400/50"></span>
+          </div>
+        </div>
+
+        <nav id="desktop-nav" class="flex flex-col gap-1.5 px-4 py-2"></nav>
+      </div>
+
+      <div class="relative z-10 flex flex-col">
+        <div class="px-4 pb-3">
+          <button type="button" onclick="openSettingsModal()" class="flex w-full items-center gap-3 rounded-full px-4 py-2 text-sm font-medium text-slate-600 hover:bg-emerald-50 hover:text-[#156235]">
+            <span>⚙ Pengaturan Ujian</span>
+          </button>
+        </div>
+        <svg viewBox="0 0 260 110" preserveAspectRatio="none" class="pointer-events-none h-24 w-full">
+          <path d="M0 44C58 24 118 68 184 52C218 44 242 28 260 18V110H0V44Z" fill="#156235"></path>
+          <path d="M0 32C62 12 124 56 190 40C220 32 242 18 260 10V22C242 30 220 44 190 52C124 68 62 24 0 44V32Z" fill="#F59E0B"></path>
+          <path d="M0 72C75 56 150 96 260 64V110H0V72Z" fill="#0E4A27"></path>
+        </svg>
+      </div>
+    </aside>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="no-print fixed inset-0 z-40 hidden lg:hidden">
+      <div class="fixed inset-0 bg-slate-950/50" onclick="toggleMobileMenu(false)"></div>
+      <aside class="relative z-10 flex w-72 flex-col justify-between bg-white shadow-xl">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+            <div class="flex items-center gap-3">
+              <img src="https://smpit.almultazam.sch.id/wp-content/uploads/2025/01/cropped-Logo-SMPIT.png" alt="Logo" class="h-10 w-10 object-contain" referrerpolicy="no-referrer" />
+              <div>
+                <span class="block font-display text-sm font-extrabold text-[#156235]">LMS Pengawas Ujian</span>
+                <p class="text-[11px] font-bold text-slate-700">SMPIT AL-MULTAZAM</p>
+              </div>
+            </div>
+            <button type="button" onclick="toggleMobileMenu(false)" class="rounded-lg p-2 text-slate-500">✕</button>
+          </div>
+          <nav id="mobile-nav" class="flex flex-col gap-1.5 p-4"></nav>
+        </div>
+        <div class="border-t border-slate-100 p-4">
+          <button type="button" onclick="toggleMobileMenu(false); openSettingsModal()" class="w-full rounded-full px-4 py-2.5 text-left text-sm font-medium text-slate-700 hover:bg-emerald-50">
+            ⚙ Pengaturan Ujian
+          </button>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Main Column -->
+    <div class="flex min-w-0 flex-1 flex-col">
+      <!-- Top Wave -->
+      <div class="no-print">
+        <svg viewBox="0 0 1200 72" preserveAspectRatio="none" class="pointer-events-none h-10 w-full sm:h-12">
+          <path d="M0 0H1200V24C1020 52 840 12 620 26C390 41 190 58 0 22V0Z" fill="#156235"></path>
+          <path d="M0 14C210 52 410 26 630 14C860 2 1030 40 1200 16V26C1020 50 850 14 630 24C410 34 210 62 0 26V14Z" fill="#F59E0B"></path>
+        </svg>
+      </div>
+
+      <!-- Header -->
+      <header class="no-print flex items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+        <div class="flex min-w-0 items-center gap-3">
+          <button type="button" onclick="toggleMobileMenu(true)" class="rounded-full border border-emerald-900/15 bg-white px-3 py-2 text-sm font-bold text-[#156235] lg:hidden">☰</button>
+          <div class="flex items-center gap-2.5 text-sm">
+            <button type="button" onclick="switchTab('overview')" class="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-900/10 bg-white text-[#156235] shadow-xs">⌂</button>
+            <span class="hidden font-semibold text-slate-600 sm:inline">LMS Pengawas Ujian SMPIT AL-MULTAZAM</span>
+            <span class="hidden text-slate-400 sm:inline">›</span>
+            <span id="header-active-label" class="truncate font-display font-bold text-[#156235]">Ringkasan</span>
+          </div>
+        </div>
+        <button id="header-cta-btn" type="button" onclick="switchTab('kiosk')" class="rounded-full bg-gradient-to-r from-[#156235] to-[#1E7E45] px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:opacity-95 whitespace-nowrap">
+          📷 Buka Pemindai Kamera
+        </button>
+      </header>
+
+      <!-- Main Viewport -->
+      <main id="main-viewport" class="mx-auto w-full max-w-[1280px] flex-1 px-4 pb-8 pt-2 sm:px-6 lg:px-8">
+        <div class="rounded-2xl border border-emerald-900/10 bg-white p-10 text-center text-sm text-slate-500">
+          Memuat data dari Google Spreadsheet...
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal Zoom Barcode -->
+  <div id="zoom-modal" class="no-print fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/70 p-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-xs font-semibold text-[#156235]">Kartu Barcode Siap Pindai</p>
+          <h3 id="zoom-teacher-name" class="mt-0.5 text-lg font-bold text-slate-900"></h3>
+          <p id="zoom-teacher-meta" class="text-xs text-slate-500"></p>
+        </div>
+        <button type="button" onclick="closeZoomModal()" class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">✕</button>
+      </div>
+      <div class="mt-5 flex flex-col items-center gap-3 rounded-xl border border-emerald-900/10 bg-[#F4FAF6] p-6">
+        <img id="zoom-qr-img" alt="QR" class="h-44 w-44 rounded-lg border border-slate-200 bg-white p-2" />
+        <svg id="zoom-barcode-svg" class="max-w-full rounded border border-slate-200 bg-white px-2 py-1"></svg>
+      </div>
+      <div class="mt-5 flex gap-3">
+        <button id="zoom-download-btn" type="button" class="flex-1 rounded-full bg-[#156235] px-4 py-2.5 text-sm font-semibold text-white">Unduh Kartu PNG</button>
+        <button type="button" onclick="closeZoomModal()" class="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Pengaturan -->
+  <div id="settings-modal" class="no-print fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 p-4">
+    <form onsubmit="submitSettings(event)" class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold text-slate-900">Pengaturan Ujian</h3>
+        <button type="button" onclick="closeSettingsModal()" class="rounded-lg p-1.5 text-slate-400">✕</button>
+      </div>
+      <div class="mt-4 flex flex-col gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700">Nama Sekolah</label>
+          <input id="set-inst" type="text" required class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700">Nama Kegiatan Ujian</label>
+          <input id="set-exam" type="text" required class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700">Tahun Ajaran</label>
+          <input id="set-year" type="text" required class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono text-sm" />
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button type="button" onclick="closeSettingsModal()" class="rounded-full border border-slate-300 px-4 py-2 text-sm text-slate-700">Batal</button>
+        <button type="submit" class="rounded-full bg-[#156235] px-5 py-2 text-sm font-semibold text-white">Simpan</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const LOGO_URL = 'https://smpit.almultazam.sch.id/wp-content/uploads/2025/01/cropped-Logo-SMPIT.png';
+    const NAV_TABS = [
+      { id: 'overview', label: 'Ringkasan', icon: '⊞' },
+      { id: 'kiosk', label: 'Pemindai Kamera', icon: '📷' },
+      { id: 'teachers', label: 'Data Guru & Barcode', icon: '▦' },
+      { id: 'sessions', label: 'Jadwal Sesi', icon: '🕒' },
+      { id: 'report', label: 'Rekap Kehadiran', icon: '📋' }
+    ];
+
+    let state = {
+      tab: 'overview',
+      data: null,
+      draftSalt: Math.floor(1000 + Math.random() * 8999),
+      draftName: '',
+      draftNip: '',
+      draftSubject: '',
+      teacherEntryMode: 'single',
+      teacherSearch: '',
+      reportDate: '',
+      reportShowAllDates: false,
+      reportSession: 'all',
+      reportStatus: 'present',
+      reportSearch: '',
+      kioskSessionMode: 'auto',
+      kioskMirrored: false,
+      kioskSound: true,
+      kioskVoice: true,
+      kioskFullscreen: false,
+      cameras: [],
+      selectedCameraId: '',
+      cameraStatus: 'idle',
+      lastScanBanner: null
+    };
+
+    let html5QrInstance = null;
+    let lastScanned = { code: '', at: 0 };
+    let bannerTimer = null;
+
+    function esc(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function todayYmd() {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    function resolveActiveSession() {
+      if (!state.data) return { id: 'ses-1', name: 'Sesi 1', startTime: '07:30', endTime: '09:30' };
+      const cfg = state.data.settings;
+      const sessions = state.data.sessions;
+      if (cfg.sessionMode === 'manual') {
+        const m = sessions.find(s => s.id === cfg.manualSessionId);
+        if (m) return m;
+      }
+      const s1 = sessions[0];
+      const s2 = sessions[1];
+      const now = new Date();
+      const mins = now.getHours() * 60 + now.getMinutes();
+      const toMin = t => { const p = String(t).split(':'); return (parseInt(p[0], 10) || 0) * 60 + (parseInt(p[1], 10) || 0); };
+      const switchPt = Math.floor((toMin(s1.endTime) + toMin(s2.startTime)) / 2);
+      return mins >= switchPt ? s2 : s1;
+    }
+
+    function generateDraftCode(name, salt) {
+      const cleaned = String(name || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z\s]/g, ' ').trim();
+      if (!cleaned) return '';
+      const token = (cleaned.split(/\s+/)[0] || 'GURU').slice(0, 6);
+      let hash = salt;
+      for (let i = 0; i < cleaned.length; i++) hash = (hash * 31 + cleaned.charCodeAt(i)) % 9000;
+      return 'PGW-' + token + '-' + String(1000 + (Math.abs(hash) % 9000));
+    }
+
+    function makeQrDataUrl(text, sizePx) {
+      try {
+        const qr = qrcode(0, 'M');
+        qr.addData(text);
+        qr.make();
+        return qr.createDataURL(Math.max(4, Math.floor((sizePx || 160) / 30)), 1);
+      } catch (e) { return ''; }
+    }
+
+    function playTone(type) {
+      if (!state.kioskSound) return;
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        const ctx = new Ctx();
+        const now = ctx.currentTime;
+        const beep = (f, t, d) => {
+          const o = ctx.createOscillator(), g = ctx.createGain();
+          o.type = type === 'error' ? 'sawtooth' : 'sine';
+          o.frequency.setValueAtTime(f, t);
+          g.gain.setValueAtTime(0.001, t);
+          g.gain.exponentialRampToValueAtTime(0.16, t + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.001, t + d);
+          o.connect(g); g.connect(ctx.destination);
+          o.start(t); o.stop(t + d + 0.02);
+        };
+        if (type === 'success') { beep(880, now, 0.11); beep(1174, now + 0.1, 0.18); }
+        else if (type === 'duplicate') { beep(660, now, 0.1); beep(660, now + 0.13, 0.12); }
+        else { beep(240, now, 0.22); }
+      } catch (e) {}
+    }
+
+    function speakText(txt) {
+      if (!state.kioskVoice || !('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(txt);
+        u.lang = 'id-ID';
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    function detectDevice() {
+      const ua = navigator.userAgent.toLowerCase();
+      if (ua.includes('googletv') || ua.includes('android tv') || ua.includes('smart-tv')) return 'Google TV';
+      if (ua.includes('ipad') || (ua.includes('macintosh') && navigator.maxTouchPoints > 1)) return 'iPad';
+      if (ua.includes('iphone') || (ua.includes('android') && ua.includes('mobile'))) return 'HP';
+      return 'Laptop / Desktop';
+    }
+
+    function renderNav() {
+      const html = NAV_TABS.map(item => {
+        const active = state.tab === item.id;
+        return `<button type="button" onclick="switchTab('${item.id}'); toggleMobileMenu(false);" class="flex items-center justify-between gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-all ${active ? 'bg-gradient-to-r from-[#156235] to-[#1E7E45] text-white shadow-sm' : 'text-slate-700 hover:bg-emerald-50 hover:text-[#156235]'}">
+          <span class="flex items-center gap-2.5"><span>${item.icon}</span><span>${item.label}</span></span>
+          ${active ? '<span>›</span>' : ''}
+        </button>`;
+      }).join('');
+      document.getElementById('desktop-nav').innerHTML = html;
+      document.getElementById('mobile-nav').innerHTML = html;
+      const cur = NAV_TABS.find(n => n.id === state.tab);
+      document.getElementById('header-active-label').textContent = cur ? cur.label : 'Ringkasan';
+      const cta = document.getElementById('header-cta-btn');
+      if (state.tab === 'kiosk') {
+        cta.textContent = '▦ Buat Barcode Guru';
+        cta.setAttribute('onclick', "switchTab('teachers')");
+      } else {
+        cta.textContent = '📷 Buka Pemindai Kamera';
+        cta.setAttribute('onclick', "switchTab('kiosk')");
+      }
+    }
+
+    function toggleMobileMenu(open) {
+      document.getElementById('mobile-drawer').classList.toggle('hidden', !open);
+    }
+
+    async function stopCamera() {
+      if (!html5QrInstance) return;
+      try {
+        const st = html5QrInstance.getState();
+        if (st === 2 || st === 3) await html5QrInstance.stop();
+        html5QrInstance.clear();
+      } catch (e) {}
+      html5QrInstance = null;
+    }
+
+    async function switchTab(tab) {
+      if (state.tab === 'kiosk' && tab !== 'kiosk') {
+        await stopCamera();
+      }
+      state.tab = tab;
+      render();
+      if (tab === 'kiosk') {
+        setTimeout(() => startCamera(), 150);
+      }
+    }
+
+    function render() {
+      renderNav();
+      if (!state.data) return;
+      const vp = document.getElementById('main-viewport');
+      if (state.tab === 'overview') vp.innerHTML = renderOverview();
+      else if (state.tab === 'kiosk') vp.innerHTML = renderKiosk();
+      else if (state.tab === 'teachers') { vp.innerHTML = renderTeachers(); renderTeacherBarcodes(); }
+      else if (state.tab === 'sessions') vp.innerHTML = renderSessions();
+      else if (state.tab === 'report') vp.innerHTML = renderReport();
+    }
+
+    function renderOverview() {
+      const cfg = state.data.settings;
+      const teachers = state.data.teachers;
+      const today = todayYmd();
+      const activeSession = resolveActiveSession();
+      const todayLogs = state.data.attendances.filter(a => a.date === today);
+      const sessionLogs = todayLogs.filter(a => a.sessionId === activeSession.id);
+      const s1Count = todayLogs.filter(a => a.sessionId === 'ses-1').length;
+      const s2Count = todayLogs.filter(a => a.sessionId === 'ses-2').length;
+      const attendedSet = new Set(sessionLogs.map(a => a.teacherId));
+      const absentList = teachers.filter(t => !attendedSet.has(t.id));
+      const pct = teachers.length > 0 ? Math.round((sessionLogs.length / teachers.length) * 100) : 0;
+
+      return `
+        <div class="flex flex-col gap-5">
+          <section class="relative overflow-hidden rounded-2xl border border-emerald-900/10 bg-white shadow-sm">
+            <svg viewBox="0 0 120 220" preserveAspectRatio="none" class="pointer-events-none absolute inset-y-0 left-0 h-full w-20 sm:w-24">
+              <path d="M0 0H86C44 58 46 146 92 220H0V0Z" fill="#156235"></path>
+              <path d="M72 0H86C44 58 46 146 92 220H78C34 146 34 58 72 0Z" fill="#F59E0B"></path>
+            </svg>
+            <svg viewBox="0 0 260 120" preserveAspectRatio="none" class="pointer-events-none absolute bottom-0 right-0 h-20 w-52 sm:h-24 sm:w-64">
+              <path d="M260 44C212 46 164 84 96 106C64 116 38 119 16 120H260V44Z" fill="#156235" fill-opacity="0.9"></path>
+              <path d="M260 38C210 40 162 78 94 102C68 111 46 116 24 120H46C70 114 94 107 118 98C178 76 218 46 260 46V38Z" fill="#F59E0B"></path>
+            </svg>
+            <div class="relative z-10 flex flex-col justify-between gap-5 py-6 pl-24 pr-6 sm:flex-row sm:items-center sm:pl-28 sm:pr-8">
+              <div>
+                <p class="text-xs font-medium text-slate-600">${esc(cfg.institutionName)} · Tahun Ajaran ${esc(cfg.academicYear)}</p>
+                <h2 class="mt-1 font-display text-2xl font-extrabold text-slate-900 sm:text-3xl">${esc(cfg.examTitle)}</h2>
+                <p class="mt-2 text-sm text-slate-700">Sesi aktif saat ini: <strong class="text-[#156235]">${esc(activeSession.name)} (${esc(activeSession.startTime)}–${esc(activeSession.endTime)} WIB)</strong></p>
+              </div>
+              <div class="flex shrink-0 flex-col gap-2.5">
+                <button type="button" onclick="switchTab('teachers')" class="rounded-full border border-[#156235]/30 bg-white px-5 py-2.5 text-xs font-semibold text-[#156235] hover:bg-emerald-50">▦ Buat Barcode Guru</button>
+                <button type="button" onclick="switchTab('kiosk')" class="rounded-full bg-gradient-to-r from-[#156235] to-[#1E7E45] px-5 py-2.5 text-xs font-semibold text-white shadow-sm">📷 Buka Pemindai Kamera</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div class="rounded-2xl border border-emerald-900/10 bg-white p-5 shadow-xs">
+              <p class="text-sm font-semibold text-slate-700">Total Pengawas Terdaftar</p>
+              <p class="mt-1 font-display text-3xl font-extrabold text-[#156235] tabular-nums">${teachers.length}</p>
+              <p class="mt-1 text-xs text-slate-500">Setiap guru memiliki barcode unik</p>
+            </div>
+            <div class="rounded-2xl border border-emerald-900/10 bg-white p-5 shadow-xs">
+              <p class="text-sm font-semibold text-slate-700">Sudah Hadir (${esc(activeSession.name)})</p>
+              <p class="mt-1 font-display text-3xl font-extrabold text-[#156235] tabular-nums">${sessionLogs.length} <span class="text-xl font-bold text-emerald-700">(${pct}%)</span></p>
+              <p class="mt-1 text-xs text-slate-500">Jadwal ${esc(activeSession.startTime)}–${esc(activeSession.endTime)} WIB</p>
+            </div>
+            <div class="rounded-2xl border border-amber-500/20 bg-white p-5 shadow-xs">
+              <p class="text-sm font-semibold text-slate-700">Kehadiran Harian (Sesi 1 &amp; Sesi 2)</p>
+              <p class="mt-1 font-display text-3xl font-extrabold text-amber-600 tabular-nums">${todayLogs.length}</p>
+              <p class="mt-1 text-xs text-slate-500">Sesi 1: <strong class="font-mono">${s1Count}</strong> · Sesi 2: <strong class="font-mono">${s2Count}</strong></p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+              <p class="text-sm font-semibold text-slate-700">Belum Memindai Barcode</p>
+              <p class="mt-1 font-display text-3xl font-extrabold text-slate-900 tabular-nums">${absentList.length}</p>
+              <p class="mt-1 text-xs text-slate-500">Menunggu scan kamera perangkat</p>
+            </div>
+          </section>
+
+          <div class="grid grid-cols-1 gap-5 lg:grid-cols-12">
+            <section class="rounded-2xl border border-emerald-900/10 bg-white shadow-xs lg:col-span-7">
+              <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+                <h3 class="text-sm font-bold text-slate-900">Log Kehadiran Terbaru</h3>
+                <button type="button" onclick="switchTab('report')" class="text-xs font-semibold text-[#156235] hover:underline">Lihat Semua Rekap ›</button>
+              </div>
+              ${todayLogs.length === 0 ? `<div class="px-6 py-10 text-center text-xs text-slate-500">Belum ada pengawas memindai barcode hari ini.</div>` : `
+                <table class="w-full text-left text-sm">
+                  <thead class="border-b border-slate-100 bg-emerald-50/40 text-xs font-semibold text-slate-600">
+                    <tr><th class="px-5 py-2.5">Nama</th><th class="px-4 py-2.5">Sesi</th><th class="px-5 py-2.5 text-right">Waktu</th></tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    ${todayLogs.slice(0, 7).map(l => `<tr><td class="px-5 py-3 font-semibold">${esc(l.teacherName)}</td><td class="px-4 py-3 text-xs text-[#156235]">${esc(l.sessionName)}</td><td class="px-5 py-3 text-right font-mono text-xs">${esc(l.timeDisplay)}</td></tr>`).join('')}
+                  </tbody>
+                </table>
+              `}
+            </section>
+
+            <section class="rounded-2xl border border-emerald-900/10 bg-white shadow-xs lg:col-span-5">
+              <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+                <h3 class="text-sm font-bold text-slate-900">Belum Hadir (${absentList.length})</h3>
+                <button type="button" onclick="switchTab('teachers')" class="text-xs font-semibold text-[#156235] hover:underline">Kelola Guru ›</button>
+              </div>
+              ${absentList.length === 0 ? `<div class="px-6 py-10 text-center text-xs text-slate-500">${teachers.length === 0 ? 'Data guru masih kosong.' : 'Seluruh pengawas telah hadir.'}</div>` : `
+                <ul class="divide-y divide-slate-100">
+                  ${absentList.slice(0, 7).map(t => `<li class="flex items-center justify-between px-5 py-3"><span class="text-sm font-medium">${esc(t.name)}</span><span class="font-mono text-xs text-slate-500">${esc(t.barcodeCode)}</span></li>`).join('')}
+                </ul>
+              `}
+            </section>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderKiosk() {
+      const sessions = state.data.sessions;
+      const curSession = state.kioskSessionMode === 'auto' ? resolveActiveSession() : (sessions.find(s => s.id === state.kioskSessionMode) || resolveActiveSession());
+      const todayLogs = state.data.attendances.filter(a => a.date === todayYmd());
+      const banner = state.lastScanBanner;
+
+      return `
+        <div class="${state.kioskFullscreen ? 'fixed inset-0 z-50 flex flex-col overflow-y-auto bg-slate-950 p-6 text-white' : 'flex flex-col gap-5'}">
+          <div class="flex flex-wrap items-center justify-between gap-3 rounded-2xl ${state.kioskFullscreen ? 'border border-slate-800 bg-slate-900 px-6 py-4' : 'border border-emerald-900/10 bg-white px-5 py-4 shadow-xs'}">
+            <div>
+              <p class="text-xs font-semibold text-[#156235]">${esc(state.data.settings.institutionName)} · ${esc(detectDevice())}</p>
+              <h2 class="font-display text-lg font-bold">Pemindai Kehadiran Pengawas</h2>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="kiosk-clock" class="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 font-mono text-sm font-semibold text-[#156235]">--:--:-- WIB</span>
+              <button type="button" onclick="state.kioskSound=!state.kioskSound; render(); startCamera();" class="rounded-full border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700">${state.kioskSound ? '🔊 Suara On' : '🔇 Suara Off'}</button>
+              <button type="button" onclick="toggleKioskFullscreen()" class="rounded-full bg-[#156235] px-4 py-1.5 text-xs font-semibold text-white">${state.kioskFullscreen ? 'Keluar Mode TV' : 'Mode Layar Penuh TV'}</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-5 lg:grid-cols-12">
+            <div class="flex flex-col gap-4 lg:col-span-8">
+              <div class="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-emerald-900/10 bg-white p-4 text-slate-900">
+                <div>
+                  <p class="text-xs text-slate-500">Sesi Presensi Aktif Hari Ini</p>
+                  <p class="text-sm font-bold text-[#156235]">${esc(curSession.name)} (${esc(curSession.startTime)}–${esc(curSession.endTime)} WIB)</p>
+                </div>
+                <div class="flex flex-wrap gap-1 rounded-full bg-emerald-50 p-1">
+                  <button type="button" onclick="state.kioskSessionMode='auto'; render(); startCamera();" class="rounded-full px-3 py-1.5 text-xs font-semibold ${state.kioskSessionMode === 'auto' ? 'bg-[#156235] text-white' : 'text-[#156235]'}">Otomatis Harian</button>
+                  ${sessions.map(s => `<button type="button" onclick="state.kioskSessionMode='${s.id}'; render(); startCamera();" class="rounded-full px-3 py-1.5 text-xs font-semibold ${state.kioskSessionMode === s.id ? 'bg-[#156235] text-white' : 'text-[#156235]'}">${esc(s.name)} (${esc(s.startTime)}–${esc(s.endTime)})</button>`).join('')}
+                </div>
+              </div>
+
+              <div class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 bg-slate-900 px-4 py-3 text-xs text-white">
+                  <span>📷 Kamera Pemindai QR &amp; Barcode</span>
+                  <div class="flex flex-wrap gap-2">
+                    <button type="button" onclick="flipCamera()" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 hover:bg-slate-700">Ganti Kamera</button>
+                    <button type="button" onclick="state.kioskMirrored=!state.kioskMirrored; document.getElementById('gas-qr-reader').classList.toggle('camera-mirror', state.kioskMirrored);" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 hover:bg-slate-700">Cermin</button>
+                    <label class="cursor-pointer rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 hover:bg-slate-700">
+                      Scan Foto <input type="file" accept="image/*" class="hidden" onchange="scanFromFile(this)" />
+                    </label>
+                  </div>
+                </div>
+                <div class="relative aspect-video min-h-[300px] w-full bg-slate-950">
+                  <div id="gas-qr-reader" class="h-full w-full ${state.kioskMirrored ? 'camera-mirror' : ''}"></div>
+                  <div id="kiosk-camera-overlay"></div>
+                  <div id="kiosk-banner-slot">${renderScanBannerHtml(banner)}</div>
+                </div>
+                <form onsubmit="submitManualScan(event)" class="flex gap-2 border-t border-slate-800 bg-slate-900 p-4">
+                  <input id="manual-barcode-input" type="text" placeholder="Ketik / tembak scanner USB kode barcode..." class="flex-1 rounded-full border border-slate-700 bg-slate-950 px-4 py-2 font-mono text-sm text-white" />
+                  <button type="submit" class="rounded-full bg-[#156235] px-5 py-2 text-xs font-semibold text-white">Catat Hadir</button>
+                </form>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-4 lg:col-span-4">
+              <div id="kiosk-logs-slot" class="rounded-2xl border border-emerald-900/10 bg-white p-5 text-slate-900">
+                ${renderKioskLogsHtml(todayLogs)}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderScanBannerHtml(banner) {
+      if (!banner) return '';
+      return `
+        <div class="absolute inset-x-4 bottom-4 z-20 rounded-2xl border ${banner.result === 'recorded' ? 'border-emerald-500 bg-slate-900/95' : banner.result === 'already_scanned' ? 'border-amber-500 bg-slate-900/95' : 'border-red-500 bg-slate-900/95'} p-5 text-white shadow-xl">
+          <p class="text-xs font-bold ${banner.result === 'recorded' ? 'text-emerald-400' : banner.result === 'already_scanned' ? 'text-amber-400' : 'text-red-400'}">
+            ${banner.result === 'recorded' ? 'TANDA KEHADIRAN BERHASIL' : banner.result === 'already_scanned' ? 'SUDAH TERCATAT HADIR' : 'BARCODE TIDAK DIKENALI'}
+          </p>
+          <p class="mt-1 text-xl font-bold">${esc(banner.teacher ? banner.teacher.name : banner.message)}</p>
+          ${banner.attendance ? `<p class="mt-1 text-xs text-slate-300">${esc(banner.attendance.sessionName)} · ${esc(banner.attendance.timeDisplay)}</p>` : ''}
+        </div>
+      `;
+    }
+
+    function renderKioskLogsHtml(todayLogs) {
+      return `
+        <h3 class="text-sm font-bold">Kehadiran Terbaru Hari Ini (${todayLogs.length})</h3>
+        <ul class="mt-3 divide-y divide-slate-100">
+          ${todayLogs.slice(0, 6).map(l => `<li class="py-2.5 flex justify-between gap-2"><div><p class="text-sm font-semibold">${esc(l.teacherName)}</p><p class="text-xs text-slate-500">${esc(l.sessionName)}</p></div><span class="font-mono text-xs font-semibold text-[#156235]">${esc(l.timeDisplay)}</span></li>`).join('') || '<li class="py-6 text-center text-xs text-slate-500">Belum ada scan hari ini.</li>'}
+        </ul>
+      `;
+    }
+
+    function renderTeachers() {
+      const teachers = state.data.teachers;
+      const q = state.teacherSearch.toLowerCase();
+      const filtered = q ? teachers.filter(t => t.name.toLowerCase().includes(q) || t.barcodeCode.toLowerCase().includes(q)) : teachers;
+      const draftCode = generateDraftCode(state.draftName, state.draftSalt);
+      const draftQr = draftCode ? makeQrDataUrl(draftCode, 140) : '';
+
+      return `
+        <div class="flex flex-col gap-6">
+          <section class="no-print rounded-2xl border border-emerald-900/10 bg-white p-6 shadow-xs">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+              <div>
+                <h2 class="font-display text-lg font-bold text-slate-900">Input Nama Guru &amp; Pembuatan Barcode Otomatis</h2>
+                <p class="text-xs text-slate-500">Ketik nama guru untuk langsung menghasilkan QR Code dan Barcode Code128 siap pindai.</p>
+              </div>
+              <div class="flex gap-1 rounded-full bg-emerald-50 p-1">
+                <button type="button" onclick="state.teacherEntryMode='single'; render();" class="rounded-full px-3.5 py-1.5 text-xs font-semibold ${state.teacherEntryMode === 'single' ? 'bg-[#156235] text-white' : 'text-[#156235]'}">Satu Guru</button>
+                <button type="button" onclick="state.teacherEntryMode='batch'; render();" class="rounded-full px-3.5 py-1.5 text-xs font-semibold ${state.teacherEntryMode === 'batch' ? 'bg-[#156235] text-white' : 'text-[#156235]'}">Banyak Sekaligus</button>
+              </div>
+            </div>
+
+            ${state.teacherEntryMode === 'single' ? `
+              <div class="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-12">
+                <form onsubmit="submitAddTeacher(event)" class="flex flex-col gap-3.5 lg:col-span-7">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700">Nama Lengkap Guru / Pengawas *</label>
+                    <input id="input-teacher-name" type="text" required value="${esc(state.draftName)}" oninput="onDraftNameInput(this.value)" placeholder="Contoh: Ustadz Ahmad Fauzi, S.Pd" class="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm" />
+                  </div>
+                  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div>
+                      <label class="block text-xs font-semibold text-slate-700">NIP / Kode Guru (Opsional)</label>
+                      <input id="input-teacher-nip" type="text" value="${esc(state.draftNip)}" oninput="state.draftNip=this.value" class="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2 font-mono text-sm" />
+                    </div>
+                    <div>
+                      <label class="block text-xs font-semibold text-slate-700">Mata Pelajaran (Opsional)</label>
+                      <input id="input-teacher-subject" type="text" value="${esc(state.draftSubject)}" oninput="state.draftSubject=this.value" class="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm" />
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-3 pt-1">
+                    <button type="submit" class="rounded-full bg-[#156235] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#11502b]">+ Simpan &amp; Aktifkan Barcode</button>
+                    <span id="draft-code-label" class="font-mono text-xs font-semibold text-[#156235]">${draftCode ? 'Kode: ' + draftCode : ''}</span>
+                  </div>
+                </form>
+
+                <div class="flex flex-col items-center justify-center rounded-2xl border border-emerald-900/10 bg-[#F4FAF6] p-5 lg:col-span-5">
+                  <p class="text-xs font-semibold text-[#156235]">Pratinjau Barcode Otomatis</p>
+                  <p id="draft-preview-name" class="mt-0.5 text-base font-bold text-slate-900">${esc(state.draftName || 'Nama Guru Akan Tampil di Sini')}</p>
+                  <div id="draft-barcode-box" class="mt-3 flex flex-col items-center gap-2">
+                    ${draftCode ? `<img src="${draftQr}" class="h-32 w-32 rounded-lg border border-slate-200 bg-white p-1.5" /><svg id="draft-linear-svg"></svg>` : `<p class="py-6 text-xs text-slate-500">Mulai ketik nama guru...</p>`}
+                  </div>
+                </div>
+              </div>
+            ` : `
+              <form onsubmit="submitBatchTeachers(event)" class="mt-5 flex flex-col gap-3">
+                <label class="text-xs font-semibold text-slate-700">Daftar Nama Guru (Satu baris satu guru)</label>
+                <textarea id="batch-textarea" rows="5" placeholder="Ahmad Fauzi, S.Pd&#10;Siti Aminah, M.Pd" class="w-full rounded-xl border border-slate-300 p-3 text-sm"></textarea>
+                <div><button type="submit" class="rounded-full bg-[#156235] px-6 py-2.5 text-sm font-semibold text-white">Buat Semua Barcode Otomatis</button></div>
+              </form>
+            `}
+          </section>
+
+          <section class="no-print rounded-2xl border border-emerald-900/10 bg-white shadow-xs">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-6 py-4">
+              <h3 class="text-base font-bold text-slate-900">Daftar Pengawas &amp; Kartu Barcode (${teachers.length})</h3>
+              <div class="flex flex-wrap gap-2">
+                <input type="text" value="${esc(state.teacherSearch)}" oninput="state.teacherSearch=this.value; render();" placeholder="Cari nama..." class="rounded-full border border-slate-300 px-4 py-1.5 text-xs" />
+                ${teachers.length > 0 ? `<button type="button" onclick="window.print()" class="rounded-full border border-[#156235]/30 px-4 py-1.5 text-xs font-semibold text-[#156235]">🖨 Cetak Semua (A4)</button>` : ''}
+              </div>
+            </div>
+            <div class="grid grid-cols-1 gap-4 p-6 md:grid-cols-2 xl:grid-cols-3">
+              ${filtered.map(t => `
+                <article class="rounded-2xl border border-emerald-900/10 p-5">
+                  <div class="flex items-start justify-between gap-2">
+                    <div class="min-w-0">
+                      <h4 class="truncate text-base font-bold text-slate-900">${esc(t.name)}</h4>
+                      <p class="text-xs text-slate-500">${esc([t.nip ? 'NIP ' + t.nip : '', t.subject].filter(Boolean).join(' · ') || 'Pengawas Ujian')}</p>
+                    </div>
+                    <button type="button" onclick="removeTeacher('${t.id}')" class="text-xs text-red-600 hover:underline">Hapus</button>
+                  </div>
+                  <div class="mt-3 flex flex-col items-center gap-2 rounded-xl bg-[#F4FAF6] py-3">
+                    <img src="${makeQrDataUrl(t.barcodeCode, 100)}" class="h-24 w-24 rounded border border-slate-200 bg-white p-1" />
+                    <svg class="teacher-linear-svg max-w-full" data-code="${esc(t.barcodeCode)}"></svg>
+                  </div>
+                  <div class="mt-3 flex gap-2">
+                    <button type="button" onclick="openZoom('${t.id}')" class="flex-1 rounded-full border border-[#156235]/30 py-2 text-xs font-semibold text-[#156235]">Perbesar</button>
+                    <button type="button" onclick="downloadCardPng('${t.id}')" class="flex-1 rounded-full bg-[#156235] py-2 text-xs font-semibold text-white">Unduh PNG</button>
+                  </div>
+                </article>
+              `).join('') || `<div class="col-span-full py-10 text-center text-xs text-slate-500">Belum ada pengawas terdaftar.</div>`}
+            </div>
+          </section>
+
+          <div class="hidden print:block">
+            <h1 class="mb-4 border-b-2 border-[#156235] pb-2 text-lg font-bold">LMS Pengawas Ujian SMPIT AL-MULTAZAM — Kartu Barcode</h1>
+            <div class="grid grid-cols-2 gap-4">
+              ${filtered.map(t => `<div class="print-break-inside-avoid rounded-xl border border-slate-400 p-4 text-center"><p class="text-xs font-bold text-[#156235]">SMPIT AL-MULTAZAM</p><p class="text-sm font-bold">${esc(t.name)}</p><img src="${makeQrDataUrl(t.barcodeCode, 120)}" class="mx-auto my-2 h-24 w-24" /><p class="font-mono text-xs font-bold">${esc(t.barcodeCode)}</p></div>`).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTeacherBarcodes() {
+      const draftCode = generateDraftCode(state.draftName, state.draftSalt);
+      const draftSvg = document.getElementById('draft-linear-svg');
+      if (draftSvg && draftCode && window.JsBarcode) {
+        try { JsBarcode(draftSvg, draftCode, { format: 'CODE128', width: 1.5, height: 38, fontSize: 12, margin: 4 }); } catch (e) {}
+      }
+      document.querySelectorAll('.teacher-linear-svg').forEach(svg => {
+        const code = svg.getAttribute('data-code');
+        if (code && window.JsBarcode) {
+          try { JsBarcode(svg, code, { format: 'CODE128', width: 1.2, height: 32, fontSize: 11, margin: 3 }); } catch (e) {}
+        }
+      });
+    }
+
+    function renderSessions() {
+      const cfg = state.data.settings;
+      const sessions = state.data.sessions;
+      const active = resolveActiveSession();
+      return `
+        <div class="flex flex-col gap-5">
+          <section class="rounded-2xl border border-emerald-900/10 bg-white p-6 shadow-xs">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h2 class="font-display text-lg font-bold text-slate-900">Jadwal Sesi Harian Otomatis</h2>
+                <p class="text-xs text-slate-600">Berubah otomatis setiap hari antara Sesi 1 dan Sesi 2.</p>
+              </div>
+              <div class="flex gap-1.5 rounded-full bg-emerald-50 p-1.5">
+                <button type="button" onclick="updateSessionMode('auto', 'ses-1')" class="rounded-full px-4 py-1.5 text-xs font-semibold ${cfg.sessionMode === 'auto' ? 'bg-[#156235] text-white' : 'text-[#156235]'}">Otomatis Sesuai Jam</button>
+                <button type="button" onclick="updateSessionMode('manual', 'ses-1')" class="rounded-full px-4 py-1.5 text-xs font-semibold ${cfg.sessionMode === 'manual' && cfg.manualSessionId === 'ses-1' ? 'bg-[#156235] text-white' : 'text-[#156235]'}">Kunci Sesi 1</button>
+                <button type="button" onclick="updateSessionMode('manual', 'ses-2')" class="rounded-full px-4 py-1.5 text-xs font-semibold ${cfg.sessionMode === 'manual' && cfg.manualSessionId === 'ses-2' ? 'bg-[#156235] text-white' : 'text-[#156235]'}">Kunci Sesi 2</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="grid grid-cols-1 gap-5 md:grid-cols-2">
+            ${sessions.map(s => `
+              <form onsubmit="saveSessionTimes(event, '${s.id}')" class="rounded-2xl border ${active.id === s.id ? 'border-[#156235]' : 'border-emerald-900/10'} bg-white p-6 shadow-xs">
+                <div class="flex items-center justify-between">
+                  <h3 class="font-display text-xl font-bold text-slate-900">${esc(s.name)}</h3>
+                  ${active.id === s.id ? '<span class="text-xs font-bold text-[#156235]">✓ Sedang Aktif</span>' : ''}
+                </div>
+                <div class="mt-4 grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600">Jam Mulai</label>
+                    <input id="time-start-${s.id}" type="time" value="${esc(s.startTime)}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono text-sm" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600">Jam Selesai</label>
+                    <input id="time-end-${s.id}" type="time" value="${esc(s.endTime)}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono text-sm" />
+                  </div>
+                </div>
+                <button type="submit" class="mt-4 rounded-full bg-[#156235] px-5 py-2 text-xs font-semibold text-white">Simpan Jam ${esc(s.name)}</button>
+              </form>
+            `).join('')}
+          </section>
+        </div>
+      `;
+    }
+
+    function renderReport() {
+      const dStr = state.reportDate || todayYmd();
+      const logs = state.data.attendances.filter(a => {
+        if (!state.reportShowAllDates && a.date !== dStr) return false;
+        if (state.reportSession !== 'all' && a.sessionId !== state.reportSession) return false;
+        if (state.reportSearch && !a.teacherName.toLowerCase().includes(state.reportSearch.toLowerCase())) return false;
+        return true;
+      });
+      return `
+        <div class="flex flex-col gap-5">
+          <section class="no-print flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-emerald-900/10 bg-white p-5">
+            <div class="flex flex-wrap items-center gap-2">
+              <input type="date" value="${esc(dStr)}" ${state.reportShowAllDates ? 'disabled' : ''} onchange="state.reportDate=this.value; render();" class="rounded-full border border-slate-300 px-3 py-1.5 font-mono text-xs" />
+              <button type="button" onclick="state.reportShowAllDates=!state.reportShowAllDates; render();" class="rounded-full border px-3 py-1.5 text-xs font-semibold ${state.reportShowAllDates ? 'bg-[#156235] text-white' : 'bg-white text-slate-700'}">Semua Tanggal</button>
+              <select onchange="state.reportSession=this.value; render();" class="rounded-full border border-slate-300 px-3 py-1.5 text-xs">
+                <option value="all" ${state.reportSession==='all'?'selected':''}>Semua Sesi</option>
+                ${state.data.sessions.map(s => `<option value="${s.id}" ${state.reportSession===s.id?'selected':''}>${esc(s.name)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="flex gap-2">
+              <button type="button" onclick="exportCsv()" class="rounded-full border border-[#156235]/30 px-4 py-1.5 text-xs font-semibold text-[#156235]">Unduh CSV</button>
+              <button type="button" onclick="window.print()" class="rounded-full bg-[#156235] px-4 py-1.5 text-xs font-semibold text-white">Cetak Laporan</button>
+            </div>
+          </section>
+          <section class="overflow-hidden rounded-2xl border border-emerald-900/10 bg-white">
+            <table class="w-full text-left text-sm">
+              <thead class="border-b border-slate-200 bg-emerald-50/50 text-xs font-semibold text-slate-600">
+                <tr><th class="px-6 py-3">Nama Pengawas</th><th class="px-4 py-3">Sesi</th><th class="px-4 py-3">Tanggal &amp; Jam</th><th class="px-4 py-3">Status</th><th class="no-print px-6 py-3 text-right">Hapus</th></tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${logs.map(l => `<tr><td class="px-6 py-3 font-semibold">${esc(l.teacherName)}</td><td class="px-4 py-3 text-xs text-[#156235]">${esc(l.sessionName)}</td><td class="px-4 py-3 font-mono text-xs">${esc(l.date)} ${esc(l.timeDisplay)}</td><td class="px-4 py-3 text-xs font-semibold text-[#156235]">Hadir</td><td class="no-print px-6 py-3 text-right"><button type="button" onclick="removeAttendance('${l.id}')" class="text-xs text-red-600">Hapus</button></td></tr>`).join('') || `<tr><td colspan="5" class="px-6 py-10 text-center text-xs text-slate-500">Belum ada catatan kehadiran.</td></tr>`}
+              </tbody>
+            </table>
+          </section>
+        </div>
+      `;
+    }
+
+    function onDraftNameInput(val) {
+      state.draftName = val;
+      const code = generateDraftCode(val, state.draftSalt);
+      const nameEl = document.getElementById('draft-preview-name');
+      const codeEl = document.getElementById('draft-code-label');
+      const box = document.getElementById('draft-barcode-box');
+      if (nameEl) nameEl.textContent = val.trim() || 'Nama Guru Akan Tampil di Sini';
+      if (codeEl) codeEl.textContent = code ? 'Kode: ' + code : '';
+      if (box) {
+        if (!code) {
+          box.innerHTML = '<p class="py-6 text-xs text-slate-500">Mulai ketik nama guru...</p>';
+        } else {
+          const qr = makeQrDataUrl(code, 140);
+          box.innerHTML = `<img src="${qr}" class="h-32 w-32 rounded-lg border border-slate-200 bg-white p-1.5" /><svg id="draft-linear-svg"></svg>`;
+          const svg = document.getElementById('draft-linear-svg');
+          if (svg && window.JsBarcode) {
+            try { JsBarcode(svg, code, { format: 'CODE128', width: 1.5, height: 38, fontSize: 12, margin: 4 }); } catch (e) {}
+          }
+        }
+      }
+    }
+
+    function submitAddTeacher(e) {
+      e.preventDefault();
+      const name = state.draftName.trim();
+      if (!name) return;
+      const code = generateDraftCode(name, state.draftSalt);
+      google.script.run.withSuccessHandler(data => {
+        state.data = data;
+        state.draftName = '';
+        state.draftNip = '';
+        state.draftSubject = '';
+        state.draftSalt = Math.floor(1000 + Math.random() * 8999);
+        render();
+      }).saveTeacher({ name, nip: state.draftNip, subject: state.draftSubject, barcodeCode: code });
+    }
+
+    function submitBatchTeachers(e) {
+      e.preventDefault();
+      const raw = document.getElementById('batch-textarea').value || '';
+      const items = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean).map(l => {
+        const p = l.split(/[,\t;]/).map(x => x.trim());
+        return { name: p[0] || '', nip: p[1] || '', subject: p[2] || '' };
+      });
+      if (!items.length) return;
+      google.script.run.withSuccessHandler(res => {
+        state.data = res.data;
+        render();
+      }).saveTeachersBatch(items);
+    }
+
+    function removeTeacher(id) {
+      google.script.run.withSuccessHandler(data => { state.data = data; render(); }).deleteTeacher(id);
+    }
+
+    function removeAttendance(id) {
+      google.script.run.withSuccessHandler(data => { state.data = data; render(); }).deleteAttendance(id);
+    }
+
+    function updateSessionMode(mode, manualId) {
+      google.script.run.withSuccessHandler(data => { state.data = data; render(); }).saveSettings({ sessionMode: mode, manualSessionId: manualId });
+    }
+
+    function saveSessionTimes(e, id) {
+      e.preventDefault();
+      const st = document.getElementById('time-start-' + id).value;
+      const en = document.getElementById('time-end-' + id).value;
+      const payload = id === 'ses-1' ? { s1Start: st, s1End: en } : { s2Start: st, s2End: en };
+      google.script.run.withSuccessHandler(data => { state.data = data; render(); }).saveSettings(payload);
+    }
+
+    function openZoom(teacherId) {
+      const t = state.data.teachers.find(x => x.id === teacherId);
+      if (!t) return;
+      document.getElementById('zoom-teacher-name').textContent = t.name;
+      document.getElementById('zoom-teacher-meta').textContent = [t.nip ? 'NIP ' + t.nip : '', t.subject].filter(Boolean).join(' · ') || 'Pengawas Ujian';
+      document.getElementById('zoom-qr-img').src = makeQrDataUrl(t.barcodeCode, 200);
+      const svg = document.getElementById('zoom-barcode-svg');
+      if (window.JsBarcode) JsBarcode(svg, t.barcodeCode, { format: 'CODE128', width: 1.8, height: 48, fontSize: 13, margin: 4 });
+      document.getElementById('zoom-download-btn').onclick = () => downloadCardPng(t.id);
+      document.getElementById('zoom-modal').classList.remove('hidden');
+      document.getElementById('zoom-modal').classList.add('flex');
+    }
+
+    function closeZoomModal() {
+      document.getElementById('zoom-modal').classList.add('hidden');
+      document.getElementById('zoom-modal').classList.remove('flex');
+    }
+
+    function downloadCardPng(teacherId) {
+      const t = state.data.teachers.find(x => x.id === teacherId);
+      if (!t) return;
+      const c = document.createElement('canvas');
+      c.width = 960; c.height = 560;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, 960, 560);
+      ctx.fillStyle = '#156235'; ctx.fillRect(0, 0, 960, 134);
+      ctx.fillStyle = '#F59E0B'; ctx.fillRect(0, 134, 960, 7);
+      ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 28px sans-serif';
+      ctx.fillText('LMS Pengawas Ujian SMPIT AL-MULTAZAM', 48, 84);
+      ctx.fillStyle = '#0F172A'; ctx.font = 'bold 34px sans-serif';
+      ctx.fillText(t.name, 48, 240);
+      ctx.fillStyle = '#156235'; ctx.font = 'bold 18px sans-serif';
+      ctx.fillText('Sesi 1 (07:30–09:30) · Sesi 2 (10:00–11:30)', 48, 300);
+
+      const qrImg = new Image();
+      qrImg.onload = () => {
+        ctx.drawImage(qrImg, 664, 182, 240, 240);
+        const bc = document.createElement('canvas');
+        if (window.JsBarcode) {
+          JsBarcode(bc, t.barcodeCode, { format: 'CODE128', width: 2.3, height: 76, fontSize: 18, margin: 8 });
+          ctx.drawImage(bc, 40, 368);
+        }
+        const a = document.createElement('a');
+        a.download = 'kartu-' + t.barcodeCode.toLowerCase() + '.png';
+        a.href = c.toDataURL('image/png');
+        a.click();
+      };
+      qrImg.src = makeQrDataUrl(t.barcodeCode, 240);
+    }
+
+    function openSettingsModal() {
+      if (!state.data) return;
+      document.getElementById('set-inst').value = state.data.settings.institutionName;
+      document.getElementById('set-exam').value = state.data.settings.examTitle;
+      document.getElementById('set-year').value = state.data.settings.academicYear;
+      document.getElementById('settings-modal').classList.remove('hidden');
+      document.getElementById('settings-modal').classList.add('flex');
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settings-modal').classList.add('hidden');
+      document.getElementById('settings-modal').classList.remove('flex');
+    }
+
+    function submitSettings(e) {
+      e.preventDefault();
+      google.script.run.withSuccessHandler(data => {
+        state.data = data;
+        closeSettingsModal();
+        render();
+      }).saveSettings({
+        institutionName: document.getElementById('set-inst').value,
+        examTitle: document.getElementById('set-exam').value,
+        academicYear: document.getElementById('set-year').value
+      });
+    }
+
+    function setCameraOverlay(title, msg) {
+      const el = document.getElementById('kiosk-camera-overlay');
+      if (!el) return;
+      if (!title) {
+        el.innerHTML = '';
+        return;
+      }
+      el.innerHTML = `
+        <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-slate-950/95 p-6 text-center text-white">
+          <p class="text-base font-bold text-amber-400">${esc(title)}</p>
+          <p class="mt-2 max-w-md text-xs leading-relaxed text-slate-300">${esc(msg)}</p>
+          <div class="mt-4 flex flex-wrap justify-center gap-2">
+            <button type="button" onclick="startCamera()" class="rounded-full bg-[#156235] px-5 py-2 text-xs font-semibold text-white">Coba Aktifkan Kamera</button>
+            <label class="cursor-pointer rounded-full border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-200">
+              Scan Foto Barcode <input type="file" accept="image/*" class="hidden" onchange="scanFromFile(this)" />
+            </label>
+          </div>
+          <p class="mt-3 max-w-md text-[11px] text-slate-400">
+            Catatan: Pada sebagian HP/iPad/Google TV, Google Apps Script memblokir kamera karena berjalan di dalam iframe Google. Jika kamera tetap diblokir di Apps Script, gunakan aplikasi web utama dan hubungkan lewat URL Webhook agar tetap tersimpan otomatis ke Google Sheets.
+          </p>
+        </div>
+      `;
+    }
+
+    async function startCamera() {
+      const box = document.getElementById('gas-qr-reader');
+      if (!box || !window.Html5Qrcode) return;
+      setCameraOverlay('', '');
+      await stopCamera();
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setCameraOverlay(
+          'Akses Kamera Diblokir Browser / Frame',
+          'Google Apps Script membatasi izin kamera pada perangkat/browser ini. Gunakan browser Chrome langsung pada aplikasi web utama (Mode Hybrid) atau unggah foto barcode.'
+        );
+        return;
+      }
+      const scanCfg = { fps: 12, qrbox: { width: 240, height: 210 } };
+      try {
+        html5QrInstance = new Html5Qrcode('gas-qr-reader');
+        let started = false;
+        if (state.selectedCameraId) {
+          await html5QrInstance.start(state.selectedCameraId, scanCfg, text => processScan(text), () => {});
+          started = true;
+        } else {
+          const attempts = [{ facingMode: 'environment' }, { facingMode: 'user' }];
+          for (let i = 0; i < attempts.length; i++) {
+            try {
+              await html5QrInstance.start(attempts[i], scanCfg, text => processScan(text), () => {});
+              started = true;
+              break;
+            } catch (e) {}
+          }
+          if (!started) {
+            const cams = await Html5Qrcode.getCameras();
+            state.cameras = cams || [];
+            if (!state.cameras.length) {
+              setCameraOverlay('Kamera Tidak Terdeteksi', 'Pastikan kamera aktif (atau colokkan Webcam USB di Google TV) lalu klik Coba Aktifkan Kamera.');
+              return;
+            }
+            const back = state.cameras.find(c => /back|rear|environment/i.test(c.label));
+            state.selectedCameraId = (back || state.cameras[0]).id;
+            await html5QrInstance.start(state.selectedCameraId, scanCfg, text => processScan(text), () => {});
+            started = true;
+          }
+        }
+        if (started) {
+          try { state.cameras = await Html5Qrcode.getCameras() || []; } catch (e) {}
+          setCameraOverlay('', '');
+        }
+      } catch (err) {
+        const msg = err && err.message ? err.message : String(err);
+        setCameraOverlay(
+          'Kamera Belum Bisa Dibuka',
+          /permission|notallowed|denied|security/i.test(msg)
+            ? 'Izin kamera ditolak oleh browser atau dibatasi oleh iframe Google Apps Script. Izinkan kamera di pengaturan situs browser, atau gunakan Mode Hybrid.'
+            : 'Kamera gagal dimulai: ' + msg
+        );
+      }
+    }
+
+    function flipCamera() {
+      if (state.cameras.length <= 1) {
+        state.kioskMirrored = !state.kioskMirrored;
+        document.getElementById('gas-qr-reader').classList.toggle('camera-mirror', state.kioskMirrored);
+        return;
+      }
+      const idx = state.cameras.findIndex(c => c.id === state.selectedCameraId);
+      state.selectedCameraId = state.cameras[(idx + 1) % state.cameras.length].id;
+      startCamera();
+    }
+
+    function toggleKioskFullscreen() {
+      state.kioskFullscreen = !state.kioskFullscreen;
+      render();
+      startCamera();
+    }
+
+    async function scanFromFile(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      input.value = '';
+      try {
+        const inst = html5QrInstance || new Html5Qrcode('gas-qr-reader');
+        const text = await inst.scanFile(file, false);
+        processScan(text);
+      } catch (e) {
+        playTone('error');
+      }
+    }
+
+    function submitManualScan(e) {
+      e.preventDefault();
+      const inp = document.getElementById('manual-barcode-input');
+      if (!inp || !inp.value.trim()) return;
+      const code = inp.value.trim();
+      inp.value = '';
+      processScan(code, true);
+    }
+
+    function processScan(rawCode, skipCooldown) {
+      const code = String(rawCode || '').trim();
+      if (!code) return;
+      const nowMs = Date.now();
+      if (!skipCooldown && lastScanned.code === code.toUpperCase() && nowMs - lastScanned.at < 4000) return;
+      lastScanned = { code: code.toUpperCase(), at: nowMs };
+
+      google.script.run.withSuccessHandler(res => {
+        if (res.data) state.data = res.data;
+        state.lastScanBanner = res;
+        if (res.result === 'recorded') {
+          playTone('success');
+          if (res.teacher && res.attendance) speakText('Terima kasih ' + res.teacher.name + ', hadir pada ' + res.attendance.sessionName);
+        } else if (res.result === 'already_scanned') {
+          playTone('duplicate');
+        } else {
+          playTone('error');
+        }
+        const bannerSlot = document.getElementById('kiosk-banner-slot');
+        const logsSlot = document.getElementById('kiosk-logs-slot');
+        if (bannerSlot) bannerSlot.innerHTML = renderScanBannerHtml(res);
+        if (logsSlot && state.data) {
+          const todayLogs = state.data.attendances.filter(a => a.date === todayYmd());
+          logsSlot.innerHTML = renderKioskLogsHtml(todayLogs);
+        }
+        clearTimeout(bannerTimer);
+        bannerTimer = setTimeout(() => {
+          state.lastScanBanner = null;
+          const bSlot = document.getElementById('kiosk-banner-slot');
+          if (bSlot) bSlot.innerHTML = '';
+        }, 5000);
+      }).recordAttendanceScan({
+        barcodeCode: code,
+        sessionId: state.kioskSessionMode,
+        deviceType: detectDevice()
+      });
+    }
+
+    function exportCsv() {
+      const logs = state.data.attendances;
+      const headers = ['Nama Pengawas', 'NIP', 'Kode Barcode', 'Sesi', 'Tanggal', 'Jam Hadir', 'Status'];
+      const rows = logs.map(l => [`"${l.teacherName}"`, `"${l.teacherNip}"`, `"${l.barcodeCode}"`, `"${l.sessionName}"`, l.date, l.timeDisplay, 'Hadir'].join(','));
+      const blob = new Blob(['\uFEFF' + headers.join(',') + '\n' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'rekap-kehadiran-pengawas.csv';
+      a.click();
+    }
+
+    setInterval(() => {
+      const el = document.getElementById('kiosk-clock');
+      if (el) el.textContent = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
+    }, 1000);
+
+    setInterval(() => {
+      if (state.tab !== 'kiosk' && typeof google !== 'undefined' && google.script) {
+        google.script.run.withSuccessHandler(d => { state.data = d; render(); }).getBootstrapData();
+      }
+    }, 12000);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.withSuccessHandler(d => {
+          state.data = d;
+          render();
+        }).getBootstrapData();
+      }
+    });
+  </script>
+</body>
+</html>
